@@ -7,12 +7,18 @@
         <result column="file_name" property="fileName"/>
         <result column="file_type" property="fileType"/>
         <result column="file_url" property="fileUrl"/>
+        <result column="tag" property="tag"/>
         <result column="date" property="date"/>
     </resultMap>
 
     <insert id="insertFile" parameterType="com.wzy.springaiagent.common.pojo.entity.File">
-        insert into file (file_name, file_type, file_url, date) VALUES
-        (#{fileName},#{fileType},#{fileUrl},now())
+        insert into file (file_name, file_type,tag,file_url, date) VALUES
+        (#{fileName},#{fileType},#{tag},#{fileUrl},now())
     </insert>
+
+    <select id="getByFileTag" resultMap="dataMap" parameterType="String">
+        select * from file where tag = #{tag}
+    </select>
+
 
 </mapper>

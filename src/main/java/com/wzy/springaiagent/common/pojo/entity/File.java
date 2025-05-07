@@ -25,4 +25,6 @@ public class File {
     private String fileUrl;
     // 文件上传日期
     private Date date;
+    // 标签
+    private String tag;
 }

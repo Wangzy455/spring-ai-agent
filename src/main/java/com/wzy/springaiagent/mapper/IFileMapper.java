@@ -11,11 +11,10 @@ public interface IFileMapper {
 
     /**
      * 根据文件类型查询文件
-     * @param fileType
+     * @param tag
      * @return
      */
-    @Select("select * from file where file_type = #{fileType}")
-    List<File> getByFileType(String fileType);
+    List<File> getByFileTag(String tag);
 
     /**
      * 上传文件的元数据信息插入
