@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzy.springaiagent.mapper.IFileMapper">
+
+    <resultMap id="dataMap" type="com.wzy.springaiagent.common.pojo.entity.File">
+        <id column="id" property="id"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_type" property="fileType"/>
+        <result column="file_url" property="fileUrl"/>
+        <result column="date" property="date"/>
+    </resultMap>
+
+    <insert id="insertFile" parameterType="com.wzy.springaiagent.common.pojo.entity.File">
+        insert into file (file_name, file_type, file_url, date) VALUES
+        (#{fileName},#{fileType},#{fileUrl},now())
+    </insert>
+
+</mapper>

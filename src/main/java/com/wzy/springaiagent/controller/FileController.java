@@ -1,0 +1,67 @@
+package com.wzy.springaiagent.controller;
+
+import com.wzy.springaiagent.common.constants.Response;
+import com.wzy.springaiagent.config.MinioConfig;
+import com.wzy.springaiagent.service.IFileService;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+/**
+ * 通过minio实现网盘的文件增删改查操作
+ * 将文本元数据存储到pgvstore
+ */
+
+@RestController()
+@CrossOrigin("*")
+@RequestMapping("/api/v1/file/")
+@Slf4j
+public class FileController {
+
+    @Resource
+    private IFileService fileService;
+
+    /**
+     * 上传文件
+     * @param file
+     * @return
+     */
+    @RequestMapping(value="upload",method = RequestMethod.POST)
+    public Response<String> upload(@RequestParam MultipartFile file){
+        try{
+            log.info("开始上传文件，文件名称:{}",file.getOriginalFilename());
+            fileService.upload(file);
+            return Response.<String>builder().code("200").info("上传成功").build();
+        }catch(Exception e){
+            e.printStackTrace();
+            return Response.<String>builder().code("500").info("上传失败").build();
+        }
+    }
+
+    /**
+     * 删除文件
+     * @param fileName
+     * @return
+     */
+    @RequestMapping(value="delete",method = RequestMethod.POST)
+    public Response<String> remove(String fileName){
+        try{
+            log.info("开始删除文件:{}",fileName);
+            fileService.remove(fileName);
+            return Response.<String>builder().code("200").info("删除成功").build();
+        }catch (Exception e){
+            e.printStackTrace();
+            return Response.<String>builder().code("500").info("删除失败").build();
+        }
+    }
+}
