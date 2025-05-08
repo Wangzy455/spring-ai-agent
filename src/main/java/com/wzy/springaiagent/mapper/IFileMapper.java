@@ -1,10 +1,9 @@
 package com.wzy.springaiagent.mapper;
 
-import com.wzy.springaiagent.common.pojo.entity.File;
+import com.wzy.springaiagent.common.pojo.entity.FileEntity;
 import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface IFileMapper {
@@ -14,18 +13,22 @@ public interface IFileMapper {
      * @param tag
      * @return
      */
-    List<File> getByFileTag(String tag);
+    List<FileEntity> getByFileTag(String tag);
 
     /**
      * 上传文件的元数据信息插入
-     * @param file
+     * @param fileEntity
      */
-    void insertFile(File file);
+    void insertFile(FileEntity fileEntity);
 
     /**
      * 删除对应的文件元数据信息
      * @param fileName
      */
-    @Delete("delete from file where file_name = #{fileName}")
+    @Delete("delete from file_reo where file_name = #{fileName}")
     void deleteFile(String fileName);
+
+    void updateTag(String fileName);
+
+    List<String> getAllKnowledge();
 }

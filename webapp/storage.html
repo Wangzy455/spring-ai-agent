@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能RAG存储系统 - 存储</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Microsoft YaHei', sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      line-height: 1.6;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1e1e1e;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      border: 1px solid #333;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 16px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .nav-links a:hover {
+      background-color: #333;
+    }
+
+    .nav-links a.active {
+      background-color: #444;
+    }
+
+    .storage-container {
+      display: flex;
+      gap: 20px;
+    }
+
+    .sidebar {
+      width: 200px;
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #333;
+    }
+
+    .sidebar-item {
+      padding: 12px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-item:hover {
+      background-color: #333;
+    }
+
+    .sidebar-item.active {
+      background-color: #444;
+    }
+
+    .sidebar-item i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .main-content {
+      flex: 1;
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid #333;
+      min-height: 600px;
+    }
+
+    .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #333;
+    }
+
+    .content-header h2 {
+      font-size: 22px;
+    }
+
+    .upload-btn {
+      background-color: #4dabf7;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .upload-btn:hover {
+      background-color: #3793dd;
+    }
+
+    .fileEntity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .fileEntity-card {
+      background-color: #252525;
+      border-radius: 8px;
+      padding: 15px;
+      border: 1px solid #333;
+      transition: transform 0.3s;
+    }
+
+    .fileEntity-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .fileEntity-icon {
+      font-size: 40px;
+      color: #4dabf7;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .fileEntity-image {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .fileEntity-name {
+      font-size: 16px;
+      margin-bottom: 5px;
+      word-break: break-all;
+    }
+
+    .fileEntity-date {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 15px;
+    }
+
+    .fileEntity-actions {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .fileEntity-btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background-color 0.3s;
+    }
+
+    .download-btn {
+      background-color: #4dabf7;
+      color: #fff;
+    }
+
+    .download-btn:hover {
+      background-color: #3793dd;
+    }
+
+    .delete-btn {
+      background-color: #e03131;
+      color: #fff;
+    }
+
+    .delete-btn:hover {
+      background-color: #c92a2a;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 0;
+      color: #aaa;
+    }
+
+    .empty-state i {
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    .empty-state p {
+      font-size: 18px;
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background-color: #252525;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 500px;
+      padding: 25px;
+      position: relative;
+      border: 1px solid #444;
+      transform: translateY(-20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #333;
+    }
+
+    .modal-header h3 {
+      font-size: 20px;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: #fff;
+    }
+
+    .upload-area {
+      border: 2px dashed #444;
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
+    }
+
+    .upload-area.dragover {
+      border-color: #4dabf7;
+      background-color: rgba(77, 171, 247, 0.1);
+    }
+
+    .upload-area i {
+      font-size: 50px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    .upload-area p {
+      margin-bottom: 15px;
+      color: #aaa;
+    }
+
+    .fileEntity-input-label {
+      background-color: #4dabf7;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-block;
+      transition: background-color 0.3s;
+    }
+
+    .fileEntity-input-label:hover {
+      background-color: #3793dd;
+    }
+
+    .fileEntity-input {
+      display: none;
+    }
+
+    .selected-fileEntity {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #333;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .upload-submit {
+      width: 100%;
+      background-color: #4dabf7;
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .upload-submit:hover {
+      background-color: #3793dd;
+    }
+
+    /* Alert styles */
+    .alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 16px;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateX(120%);
+      transition: transform 0.3s;
+    }
+
+    .alert.show {
+      transform: translateX(0);
+    }
+
+    .alert-success {
+      background-color: #37b24d;
+    }
+
+    .alert-error {
+      background-color: #e03131;
+    }
+
+    .alert i {
+      font-size: 20px;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .footer {
+      background-color: #1e1e1e;
+      padding: 40px 0 20px;
+      margin-top: 50px;
+      border-top: 1px solid #333;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .footer-section {
+      flex: 1;
+      min-width: 250px;
+      margin-bottom: 20px;
+      padding-right: 20px;
+    }
+
+    .footer-section h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #4dabf7;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #333;
+    }
+
+    .footer-section p {
+      color: #aaa;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .footer-links {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #aaa;
+      text-decoration: none;
+      transition: color 0.3s;
+      font-size: 14px;
+    }
+
+    .footer-links a:hover {
+      color: #4dabf7;
+    }
+
+    .footer-section i {
+      width: 20px;
+      margin-right: 5px;
+      color: #4dabf7;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #333;
+    }
+
+    .footer-bottom p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+      }
+
+      .footer-section {
+        margin-bottom: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <nav class="navbar">
+    <div class="logo">
+      <h2>智能RAG存储系统</h2>
+    </div>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="chat.html">对话</a>
+      <a href="#">mcp</a>
+      <a href="knowledge.html">知识库</a>
+      <a href="storage.html" class="active">存储</a>
+    </div>
+  </nav>
+
+  <div class="storage-container">
+    <div class="sidebar">
+      <div class="sidebar-item" data-tag="图片">
+        <i class="fas fa-image"></i>
+        <span>图片</span>
+      </div>
+      <div class="sidebar-item" data-tag="视频">
+        <i class="fas fa-video"></i>
+        <span>视频</span>
+      </div>
+      <div class="sidebar-item" data-tag="压缩文件">
+        <i class="fas fa-file-archive"></i>
+        <span>压缩文件</span>
+      </div>
+      <div class="sidebar-item" data-tag="文本">
+        <i class="fas fa-file-alt"></i>
+        <span>文本</span>
+      </div>
+      <div class="sidebar-item" data-tag="回收站">
+        <i class="fas fa-trash-alt"></i>
+        <span>回收站</span>
+      </div>
+      <div class="sidebar-item" data-tag="未知">
+        <i class="fas fa-question-circle"></i>
+        <span>未知</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="content-header">
+        <h2>所有文件</h2>
+        <button class="upload-btn" id="showUploadModal">
+          <i class="fas fa-upload"></i>
+          上传文件
+        </button>
+      </div>
+
+      <div class="fileEntity-grid" id="fileGrid">
+        <!-- 文件将通过JavaScript动态加载 -->
+        <div class="empty-state">
+          <i class="fas fa-folder-open"></i>
+          <p>请选择左侧分类查看文件</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 上传文件模态框 -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>上传文件</h3>
+      <button class="close-modal" id="closeModal">&times;</button>
+    </div>
+    <div class="upload-area" id="uploadArea">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>拖拽文件到此处或点击下方按钮选择文件</p>
+      <label for="fileInput" class="fileEntity-input-label">选择文件</label>
+      <input type="fileEntity" id="fileInput" class="fileEntity-input">
+      <div class="selected-fileEntity" id="selectedFile"></div>
+    </div>
+    <button class="upload-submit" id="uploadSubmit">上传文件</button>
+  </div>
+</div>
+
+<!-- 提示框 -->
+<div class="alert" id="alert">
+  <i class="fas fa-check-circle"></i>
+  <span id="alertMessage"></span>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>智能RAG存储系统</h3>
+        <p>高效、安全、智能的文件管理解决方案</p>
+      </div>
+      <div class="footer-section">
+        <h3>快速链接</h3>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="storage.html">存储</a></li>
+          <li><a href="chat.html">对话</a></li>
+          <li><a href="knowledge.html">知识库</a></li>
+          <li><a href="#">帮助中心</a></li>
+          <li><a href="#">关于我们</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>联系我们</h3>
+        <p><i class="fas fa-envelope"></i> wangziyuan455@Gmail.com</p>
+        <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 智能RAG存储系统 - 保留所有权利</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 导航栏激活状态
+    const currentPage = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    navLinks.forEach(link => {
+      const linkPage = link.getAttribute('href');
+      if (linkPage === currentPage) {
+        link.classList.add('active');
+      } else if (currentPage === '' && linkPage === 'index.html') {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
+    // 侧边栏点击事件
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    const contentHeader = document.querySelector('.content-header h2');
+    const fileGrid = document.getElementById('fileGrid');
+
+    sidebarItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // 移除所有激活状态
+        sidebarItems.forEach(i => i.classList.remove('active'));
+        // 添加当前激活状态
+        this.classList.add('active');
+
+        const tag = this.getAttribute('data-tag');
+        contentHeader.textContent = tag;
+
+        // 显示加载中
+        fileGrid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="loading-spinner"></div>
+                            <p>正在加载文件...</p>
+                        </div>
+                    `;
+
+        // 调用后端API获取文件列表
+        fetchFiles(tag);
+      });
+    });
+
+    // 获取文件列表
+    function fetchFiles(tag) {
+      const encodedTag = encodeURIComponent(tag);
+      fetch(`http://localhost:8080/api/v1/file/show?tag=${encodedTag}`, {
+        method: 'POST',
+        headers: {
+          'Accept': '*/*',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive',
+          'User-Agent': 'PostmanRuntime-ApipostRuntime/1.1.0'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.code === "200" && data.data && data.data.length > 0) {
+          displayFiles(data.data);
+        } else {
+          fileGrid.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-folder-open"></i>
+                                <p>暂无文件</p>
+                            </div>
+                        `;
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching fileEntities:', error);
+        fileGrid.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>获取文件失败，请重试</p>
+                        </div>
+                    `;
+      });
+    }
+
+    // 显示文件列表
+    function displayFiles(fileEntities) {
+      fileGrid.innerHTML = '';
+
+      fileEntities.forEach(fileEntity => {
+        const fileDate = new Date(fileEntity.date).toLocaleDateString('zh-CN');
+        let fileIcon = 'fa-fileEntity';
+        const isImage = fileEntity.fileType.match(/^(jpg|jpeg|png|gif|bmp|webp)$/i);
+
+        // 根据文件类型设置图标
+        if (isImage) {
+          fileIcon = 'fa-fileEntity-image';
+        } else if (fileEntity.fileType.match(/^(mp4|avi|mov|wmv|flv|mkv)$/i)) {
+          fileIcon = 'fa-fileEntity-video';
+        } else if (fileEntity.fileType.match(/^(zip|rar|7z|tar|gz)$/i)) {
+          fileIcon = 'fa-fileEntity-archive';
+        } else if (fileEntity.fileType.match(/^(txt|doc|docx|pdf|md)$/i)) {
+          fileIcon = 'fa-fileEntity-alt';
+        }
+
+        const fileCard = document.createElement('div');
+        fileCard.className = 'fileEntity-card';
+
+        // 如果是图片，显示图片本身，否则显示图标
+        if (isImage && fileEntity.fileUrl) {
+          fileCard.innerHTML = `
+                <img src="${fileEntity.fileUrl}" alt="${fileEntity.fileName}" class="fileEntity-image" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20fill%3D%22%23444%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%23fff%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3E图片加载失败%3C%2Ftext%3E%3C%2Fsvg%3E';">
+                <div class="fileEntity-name">${fileEntity.fileName}</div>
+                <div class="fileEntity-date">${fileDate}</div>
+                <div class="fileEntity-actions">
+                    <button class="fileEntity-btn download-btn" data-filename="${fileEntity.fileName}">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                    <button class="fileEntity-btn delete-btn" data-filename="${fileEntity.fileName}">
+                        <i class="fas fa-trash"></i> 删除
+                    </button>
+                </div>
+            `;
+        } else {
+          fileCard.innerHTML = `
+                <div class="fileEntity-icon">
+                    <i class="fas ${fileIcon}"></i>
+                </div>
+                <div class="fileEntity-name">${fileEntity.fileName}</div>
+                <div class="fileEntity-date">${fileDate}</div>
+                <div class="fileEntity-actions">
+                    <button class="fileEntity-btn download-btn" data-filename="${fileEntity.fileName}">
+                        <i class="fas fa-download"></i> 下载
+                    </button>
+                    <button class="fileEntity-btn delete-btn" data-filename="${fileEntity.fileName}">
+                        <i class="fas fa-trash"></i> 删除
+                    </button>
+                </div>
+            `;
+        }
+
+        fileGrid.appendChild(fileCard);
+      });
+
+      // 添加下载按钮事件
+      document.querySelectorAll('.download-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const fileName = this.getAttribute('data-filename');
+          downloadFile(fileName);
+        });
+      });
+
+      // 添加删除按钮事件
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const fileName = this.getAttribute('data-filename');
+          deleteFile(fileName);
+        });
+      });
+    }
+
+    // 下载文件
+    function downloadFile(fileName) {
+      fetch(`http://localhost:8080/api/v1/file/download?fileName=${encodeURIComponent(fileName)}`, {
+        method: 'GET',
+        headers: {
+          'Accept': '*/*',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive',
+          'User-Agent': 'PostmanRuntime-ApipostRuntime/1.1.0'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('下载失败');
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        showAlert('下载成功', 'success');
+      })
+      .catch(error => {
+        console.error('Error downloading fileEntity:', error);
+        showAlert('下载失败，请重试', 'error');
+      });
+    }
+
+    // 删除文件
+    function deleteFile(fileName) {
+      fetch(`http://localhost:8080/api/v1/file/delete?fileName=${encodeURIComponent(fileName)}`, {
+        method: 'POST',
+        headers: {
+          'Accept': '*/*',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive',
+          'User-Agent': 'PostmanRuntime-ApipostRuntime/1.1.0'
+        }
+      })
+      .then(response => {
+        if (response.status === 200) {
+          showAlert('删除成功', 'success');
+          // 刷新当前分类的文件列表
+          const activeItem = document.querySelector('.sidebar-item.active');
+          if (activeItem) {
+            activeItem.click();
+          }
+        } else {
+          throw new Error('删除失败');
+        }
+      })
+      .catch(error => {
+        console.error('Error deleting fileEntity:', error);
+        showAlert('删除失败，请重试', 'error');
+      });
+    }
+
+    // 上传模态框
+    const uploadModal = document.getElementById('uploadModal');
+    const showUploadModal = document.getElementById('showUploadModal');
+    const closeModal = document.getElementById('closeModal');
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const selectedFile = document.getElementById('selectedFile');
+    const uploadSubmit = document.getElementById('uploadSubmit');
+
+    showUploadModal.addEventListener('click', function() {
+      uploadModal.classList.add('active');
+    });
+
+    closeModal.addEventListener('click', function() {
+      uploadModal.classList.remove('active');
+      // 重置文件选择
+      fileInput.value = '';
+      selectedFile.style.display = 'none';
+      selectedFile.textContent = '';
+    });
+
+    // 拖拽上传
+    uploadArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', function() {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+
+      if (e.dataTransfer.fileEntities.length) {
+        fileInput.fileEntities = e.dataTransfer.fileEntities;
+        showSelectedFile(e.dataTransfer.fileEntities[0]);
+      }
+    });
+
+    // 文件选择
+    fileInput.addEventListener('change', function() {
+      if (this.fileEntities.length) {
+        showSelectedFile(this.fileEntities[0]);
+      }
+    });
+
+    function showSelectedFile(fileEntity) {
+      selectedFile.style.display = 'block';
+      selectedFile.textContent = `已选择: ${fileEntity.name} (${formatFileSize(fileEntity.size)})`;
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // 上传文件
+    uploadSubmit.addEventListener('click', function() {
+      if (!fileInput.fileEntities.length) {
+        showAlert('请选择文件', 'error');
+        return;
+      }
+
+      const fileEntity = fileInput.fileEntities[0];
+      const formData = new FormData();
+      formData.append('fileEntity', fileEntity);
+
+      uploadSubmit.disabled = true;
+      uploadSubmit.innerHTML = '<div class="loading-spinner"></div> 上传中...';
+
+      fetch('http://localhost:8080/api/v1/file/upload', {
+        method: 'POST',
+        headers: {
+          'Accept': '*/*',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive',
+          'User-Agent': 'PostmanRuntime-ApipostRuntime/1.1.0'
+        },
+        body: formData
+      })
+      .then(response => {
+        if (response.status === 200) {
+          showAlert('上传成功', 'success');
+          uploadModal.classList.remove('active');
+
+          // 重置文件选择
+          fileInput.value = '';
+          selectedFile.style.display = 'none';
+          selectedFile.textContent = '';
+
+          // 刷新当前分类的文件列表
+          setTimeout(() => {
+            const activeItem = document.querySelector('.sidebar-item.active');
+            if (activeItem) {
+              activeItem.click();
+            }
+          }, 1000);
+        } else {
+          throw new Error('上传失败');
+        }
+      })
+      .catch(error => {
+        console.error('Error uploading fileEntity:', error);
+        showAlert('上传失败，请重试', 'error');
+      })
+      .finally(() => {
+        uploadSubmit.disabled = false;
+        uploadSubmit.innerHTML = '上传文件';
+      });
+    });
+
+    // 显示提示框
+    function showAlert(message, type) {
+      const alert = document.getElementById('alert');
+      const alertMessage = document.getElementById('alertMessage');
+
+      alertMessage.textContent = message;
+      alert.className = 'alert';
+      alert.classList.add(`alert-${type}`);
+
+      const icon = alert.querySelector('i');
+
+      alertMessage.textContent = message;
+      alert.className = 'alert';
+      alert.classList.add(`alert-${type}`);
+
+      if (type === 'success') {
+        icon.className = 'fas fa-check-circle';
+      } else {
+        icon.className = 'fas fa-exclamation-circle';
+      }
+
+      alert.classList.add('show');
+
+      setTimeout(() => {
+        alert.classList.remove('show');
+      }, 3000);
+    }
+  });
+</script>
+</body>
+</html>

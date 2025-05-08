@@ -1,7 +1,7 @@
 package com.wzy.springaiagent.service.impl;
 
 import com.wzy.springaiagent.common.constants.Constant;
-import com.wzy.springaiagent.common.pojo.entity.File;
+import com.wzy.springaiagent.common.pojo.entity.FileEntity;
 import com.wzy.springaiagent.config.MinioConfig;
 import com.wzy.springaiagent.mapper.IFileMapper;
 import com.wzy.springaiagent.service.IFileService;
@@ -33,7 +33,7 @@ public class FileServiceImpl implements IFileService {
      * @return 文件名列表
      */
     @Override
-    public List<File> show(String FileTag) {
+    public List<FileEntity> show(String FileTag) {
         try {
             return fileDao.getByFileTag(FileTag);
         } catch (Exception e) {
@@ -61,14 +61,14 @@ public class FileServiceImpl implements IFileService {
             String tag = getTag(fileType);
             log.info("插入的标签为:{}",tag);
 
-            File file = File.builder()
+            FileEntity fileEntity = FileEntity.builder()
                 .fileName(fileName)
                 .fileType(fileType)
                 .fileUrl(fileUrl)
                 .tag(tag)
                 .build();
             // 存储到mysql
-            fileDao.insertFile(file);
+            fileDao.insertFile(fileEntity);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,14 +95,15 @@ public class FileServiceImpl implements IFileService {
      * @return 是否删除成功
      */
     @Override
-    public boolean remove(String fileName) {
+    public void remove(String fileName) {
         try {
             // 从mysql中删除
-            fileDao.deleteFile(fileName);
-            return minioConfig.removeObject(minioConfig.getBucket(), fileName);
+            //fileDao.deleteFile(fileName);
+             fileDao.updateTag(fileName);
+            //return minioConfig.removeObject(minioConfig.getBucket(), fileName);
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            //return false;
         }
     }
 
@@ -112,7 +113,7 @@ public class FileServiceImpl implements IFileService {
      * @return
      */
     private String getTag(String fileType){
-        if(fileType.equals("txt")||fileType.equals("pdf")||fileType.equals("doc")){
+        if(fileType.equals("txt")||fileType.equals("pdf")||fileType.equals("doc")||fileType.equals("docx")){
             return Constant.FILE_DOC;
         }else if(fileType.equals("jpg")||fileType.equals("png")||fileType.equals("jpeg")){
             return Constant.FILE_JPG;

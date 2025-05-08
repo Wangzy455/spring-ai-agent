@@ -6,6 +6,9 @@ import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import lombok.Getter;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -149,6 +152,11 @@ public class MinioConfig implements InitializingBean {
             return true;
         }
         return false;
+    }
+    public InputStream getStream(String ragTag)
+        throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        return minioClient.getObject(
+            GetObjectArgs.builder().bucket(bucket).object(ragTag+".txt").build());
     }
 
     public String getObjectUrl(String bucketName, String objectName) throws Exception {

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wzy.springaiagent.mapper.IFileMapper">
 
-    <resultMap id="dataMap" type="com.wzy.springaiagent.common.pojo.entity.File">
+    <resultMap id="dataMap" type="com.wzy.springaiagent.common.pojo.entity.FileEntity">
         <id column="id" property="id"/>
         <result column="file_name" property="fileName"/>
         <result column="file_type" property="fileType"/>
@@ -11,13 +11,19 @@
         <result column="date" property="date"/>
     </resultMap>
 
-    <insert id="insertFile" parameterType="com.wzy.springaiagent.common.pojo.entity.File">
-        insert into file (file_name, file_type,tag,file_url, date) VALUES
+    <insert id="insertFile" parameterType="com.wzy.springaiagent.common.pojo.entity.FileEntity">
+        insert into file_reo (file_name, file_type,tag,file_url, date) VALUES
         (#{fileName},#{fileType},#{tag},#{fileUrl},now())
     </insert>
+    <update id="updateTag" parameterType="String">
+        update file_reo set tag = '回收站' where file_name = #{fileName}
+    </update>
 
     <select id="getByFileTag" resultMap="dataMap" parameterType="String">
-        select * from file where tag = #{tag}
+        select * from file_reo where tag = #{tag}
+    </select>
+    <select id="getAllKnowledge" resultType="java.lang.String">
+        select file_name from file_reo where tag = '知识库'
     </select>
 
 

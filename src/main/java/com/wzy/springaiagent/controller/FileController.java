@@ -2,7 +2,7 @@ package com.wzy.springaiagent.controller;
 
 
 import com.wzy.springaiagent.common.constants.Response;
-import com.wzy.springaiagent.common.pojo.entity.File;
+import com.wzy.springaiagent.common.pojo.entity.FileEntity;
 import com.wzy.springaiagent.service.IFileService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -84,11 +84,11 @@ public class FileController {
      * @return
      */
     @RequestMapping(value="show",method = RequestMethod.POST)
-    public Response<List<File>> show(@RequestParam String tag){
+    public Response<List<FileEntity>> show(@RequestParam String tag){
         log.info("根据文件标签展示所有文件:{}",tag);
-        List<File> files = fileService.show(tag);
-        log.info("文件：{}",files);
-        return Response.<List<File>>builder().code("200").info("展示成功").data(files).build();
+        List<FileEntity> fileEntities = fileService.show(tag);
+        log.info("文件：{}", fileEntities);
+        return Response.<List<FileEntity>>builder().code("200").info("展示成功").data(fileEntities).build();
     }
 
 }
