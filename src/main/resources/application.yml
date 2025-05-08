@@ -4,15 +4,15 @@ server:
 spring:
   ai:
     dashscope:
-      api-key: sk-9f420984753e4025829dd4907636890f
+      api-key:
     alibaba:
       toolcalling:
         weather:
           enabled: true
-          api-key: sk-9f420984753e4025829dd4907636890f
+          api-key:
     openai:
       base-url: https://dashscope.aliyuncs.com/compatible-mode
-      api-key: sk-9f420984753e4025829dd4907636890f
+      api-key:
       chat:
         options:
           model: qwen-max-latest
