@@ -140,11 +140,28 @@
             <version>0.8.1</version>
         </dependency>-->
 
-        <!-- mcp -->
+       <!--  mcp
         <dependency>
             <groupId>org.springframework.experimental</groupId>
             <artifactId>spring-ai-mcp</artifactId>
             <version>0.2.0</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.vladsch.flexmark</groupId>
+            <artifactId>flexmark</artifactId>
+            <version>0.64.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-jackson</artifactId>
+            <version>2.9.0</version>
         </dependency>
 
     </dependencies>
