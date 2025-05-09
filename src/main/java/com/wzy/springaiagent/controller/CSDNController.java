@@ -6,12 +6,10 @@ import com.wzy.springaiagent.fcalling.csdn.infrastructure.client.CSDNServiceClie
 import com.wzy.springaiagent.fcalling.csdn.infrastructure.gateway.ICSDNService;
 import com.wzy.springaiagent.fcalling.csdn.infrastructure.gateway.dto.ArticleRequestDTO;
 import com.wzy.springaiagent.fcalling.csdn.infrastructure.gateway.dto.ArticleResponseDTO;
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -61,7 +59,7 @@ public class CSDNController {
         request.setContent(jsonObject.getString("html"));
         request.setReadType("public");
         request.setLevel("0");
-        request.setTags("测试,文章");
+        request.setTags("全栈,AI");
         request.setStatus(0);
         request.setCategories("技术");
         request.setType("original");
