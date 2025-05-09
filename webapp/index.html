@@ -189,6 +189,47 @@
         margin-bottom: 30px;
       }
     }
+
+    .dashboard-section {
+      margin-top: 40px;
+    }
+
+    .dashboard-section h2 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 20px;
+    }
+
+    .chart-card {
+      background-color: #252525;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      transition: transform 0.3s;
+    }
+
+    .chart-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .chart-card h3 {
+      font-size: 18px;
+      margin-bottom: 15px;
+      color: #4dabf7;
+      text-align: center;
+    }
+
+    .chart-container {
+      height: 300px;
+      position: relative;
+    }
   </style>
 </head>
 <body>
@@ -216,16 +257,34 @@
         <p>系统自动对上传的文件进行分类，包括图片、视频、压缩文件、文本等多种类型，方便您快速查找。</p>
       </div>
       <div class="feature-card">
-        <h3>AI工作流</h3>
-        <p>通过Spring ai alibaba框架实现AI工作流</p>
+        <h3>AI 工作流</h3>
+        <p>封装了可以直接使用的AI 工作流，包括自然语言查询，csdn自动发帖</p>
       </div>
       <div class="feature-card">
         <h3>智能检索</h3>
-        <p>强大的检索功能，可以通过mcp服务让大模型通过自然语言进行检索</p>
+        <p>强大的检索功能，帮助您在海量文件中快速找到所需内容，提高工作效率。</p>
       </div>
       <div class="feature-card">
-        <h3>Docker容器化部署</h3>
-        <p>可用Docker本地容器化部署，确保您的文件存储安全可靠，防止数据丢失和泄露。</p>
+        <h3>Docker容器化技术</h3>
+        <p>利用云原生技术，可以容器化的部署系统。</p>
+      </div>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>系统数据概览</h2>
+      <div class="dashboard-grid">
+        <div class="chart-card">
+          <h3>文件类型分布</h3>
+          <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>文件数量统计</h3>
+          <div class="chart-container">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -235,27 +294,26 @@
   <div class="container">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>智能RAG存储系统</h3>
+        <h3>智能文件存储系统</h3>
         <p>高效、安全、智能的文件管理解决方案</p>
       </div>
       <div class="footer-section">
         <h3>快速链接</h3>
         <ul class="footer-links">
           <li><a href="index.html">首页</a></li>
-          <li><a href="chat.html">对话</a></li>
           <li><a href="storage.html">存储</a></li>
-          <li><a href="knowledge.html">知识库</a></li>
           <li><a href="#">帮助中心</a></li>
+          <li><a href="#">关于我们</a></li>
         </ul>
       </div>
       <div class="footer-section">
         <h3>联系我们</h3>
-        <p><i class="fas fa-envelope"></i> wangziyuan455@Gmail.com</p>
+        <p><i class="fas fa-envelope"></i> contact@filestorage.com</p>
         <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 智能RAG存储系统 - 保留所有权利</p>
+      <p>&copy; 2025 智能文件存储系统 - 保留所有权利</p>
     </div>
   </div>
 </footer>
@@ -276,6 +334,175 @@
         link.classList.remove('active');
       }
     });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 获取饼图数据
+    fetch('http://localhost:8080/api/v1/dashboard/piedata', {
+      method: 'POST',
+      headers: {
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'User-Agent': 'PostmanRuntime-ApipostRuntime/1.1.0'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.code === "200") {
+        renderPieChart(data.data);
+      } else {
+        console.error('获取饼图数据失败:', data.info);
+      }
+    })
+    .catch(error => {
+      console.error('获取饼图数据出错:', error);
+    });
+
+    // 获取柱状图数据
+    fetch('http://localhost:8080/api/v1/dashboard/zdata', {
+      method: 'POST',
+      headers: {
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Connection': 'keep-alive',
+        'User-Agent': 'PostmanRuntime-ApipostRuntime/1.1.0'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.code === "200") {
+        renderBarChart(data.data);
+      } else {
+        console.error('获取柱状图数据失败:', data.info);
+      }
+    })
+    .catch(error => {
+      console.error('获取柱状图数据出错:', error);
+    });
+
+    // 渲染饼图
+    function renderPieChart(data) {
+      const ctx = document.getElementById('pieChart').getContext('2d');
+
+      // 提取数据
+      const labels = Object.keys(data);
+      const values = Object.values(data);
+
+      // 生成颜色
+      const backgroundColors = [
+        '#4dabf7', // 蓝色
+        '#f03e3e', // 红色
+        '#40c057', // 绿色
+        '#fab005', // 黄色
+        '#7950f2', // 紫色
+        '#fd7e14', // 橙色
+        '#868e96'  // 灰色
+      ];
+
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: values,
+            backgroundColor: backgroundColors,
+            borderColor: '#1e1e1e',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: '#ffffff',
+                font: {
+                  size: 14
+                }
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw;
+                  const percentage = (value * 100).toFixed(1) + '%';
+                  return `${label}: ${percentage}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // 渲染柱状图
+    function renderBarChart(data) {
+      const ctx = document.getElementById('barChart').getContext('2d');
+
+      // 提取数据
+      const labels = Object.keys(data);
+      const values = Object.values(data);
+
+      // 生成颜色
+      const backgroundColors = [
+        'rgba(77, 171, 247, 0.7)', // 蓝色
+        'rgba(240, 62, 62, 0.7)',  // 红色
+        'rgba(64, 192, 87, 0.7)',  // 绿色
+        'rgba(250, 176, 5, 0.7)',  // 黄色
+        'rgba(121, 80, 242, 0.7)', // 紫色
+        'rgba(253, 126, 20, 0.7)', // 橙色
+        'rgba(134, 142, 150, 0.7)' // 灰色
+      ];
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '文件数量',
+            data: values,
+            backgroundColor: backgroundColors,
+            borderColor: backgroundColors.map(color => color.replace('0.7', '1')),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: '#ffffff',
+                precision: 0
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              }
+            },
+            x: {
+              ticks: {
+                color: '#ffffff'
+              },
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    }
   });
 </script>
 </body>
