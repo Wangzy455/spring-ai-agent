@@ -10,11 +10,13 @@ import java.io.IOException;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -39,7 +41,7 @@ public class CSDNController {
 
 
     @RequestMapping(value ="csdn",method = RequestMethod.GET)
-    public String pushText(@RequestParam String message) throws IOException {
+    public Flux<ChatResponse> pushText(@RequestParam String message) throws IOException {
 
         String prompt = "请用 JSON 格式生成一篇关于“" + message + "”的简短 CSDN 技术文章，要求：title 不超过 20 字，description 不超过 30 字，正文 markdown 和 html 长度合计不超过 500 字。输出格式如下：" +
             "{\"title\": \"\", \"description\": \"\", \"markdown\": \"\", \"html\": \"\"}";
@@ -90,7 +92,13 @@ public class CSDNController {
             log.info("发布文章成功 {}", articleResponseDTO);
         }
 
-        return JSON.toJSONString(response);
+        ArticleResponseDTO articleResponseDTO = response.body();
+        String res = articleResponseDTO.toString();
+
+        return chatClient.prompt("提取url,title和description")
+            .user(res)
+            .stream()
+            .chatResponse();
     }
 
 
