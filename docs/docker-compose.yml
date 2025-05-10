@@ -1,31 +1,6 @@
 version: '3.8'
 
 services:
-  # 向量数据库
-  postgres:
-    image: ankane/pgvector  # 官方 pgvector 兼容镜像
-    container_name: pgvector-db
-    environment:
-      POSTGRES_DB: vectordb
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-# 向量数据库管理器
-  pgadmin:
-    image: bitnami/pgadmin:latest
-    container_name: pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@pg.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
-    ports:
-      - "8081:80"
-    depends_on:
-      - postgres
-
   # 文件存储器
   minio:
     image: minio/minio:RELEASE.2024-11-07T00-52-20Z
