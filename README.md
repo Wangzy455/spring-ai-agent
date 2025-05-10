@@ -1,5 +1,16 @@
-### 基于Spring ai alibaba 的智能网盘项目
+### 基于Spring ai alibaba 的智能网盘demo
 
+#### 快速开始
+需要使用JDK17或以上的版本  
+依赖除了docker文件中提供的minio,还需要mysql和redis,建表语句在docs中
+
+运行 
+```
+git clone git@github.com:Wangzy455/spring-ai-agent.git
+
+```
+修改配置文件以及CSDN controller  
+配置文件中数据库配置更换成自己的,api key可以去阿里百炼申请,在代码中的CSDNcontroller中的cookie变量填写自己的cookie
 
 已实现功能
 
