@@ -7,7 +7,6 @@
 运行 
 ```
 git clone git@github.com:Wangzy455/spring-ai-agent.git
-
 ```
 修改配置文件以及CSDN controller  
 配置文件中数据库配置更换成自己的,api key可以去阿里百炼申请,在代码中的CSDNcontroller中的cookie变量填写自己的cookie
