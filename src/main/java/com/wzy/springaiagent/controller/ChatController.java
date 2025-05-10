@@ -35,6 +35,12 @@ public class ChatController {
             .call()
             .chatResponse();
     }
+
+    /**
+     * 流式对话
+     * @param message
+     * @return
+     */
     @RequestMapping(value = "generate_stream",method = RequestMethod.GET)
     public Flux<ChatResponse> generateStream(@RequestParam String message){
         return this.chatClient.prompt()

@@ -2,6 +2,7 @@ package com.wzy.springaiagent.fcalling.search;
 
 import com.wzy.springaiagent.mapper.IDynamicSqlMapper;
 import jakarta.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class DynamicSqlService {
     }
 
     public List<Map<String, Object>> generateAndExecute(String question) {
-        // 1. 通过 Prompt 生成 SQL
+
         String prompt = "建表语句:DROP TABLE IF EXISTS `file_reo`;\n"
             + "CREATE TABLE `file_reo`  (\n"
             + "  `id` int NOT NULL AUTO_INCREMENT COMMENT 'id',\n"
@@ -49,7 +50,6 @@ public class DynamicSqlService {
 
         log.info("生成的sql：{}", content);
 
-        // 3. 执行 SQL
         return IDynamicSqlMapper.executeSelect(content);
     }
 
