@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能RAG存储系统 - 知识库</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/knowledge.css">
+</head>
+<body>
+<div class="container">
+  <nav class="navbar">
+    <div class="logo">
+      <h2>智能RAG存储系统</h2>
+    </div>
+    <div class="nav-links">
+      <a href="./index.html">首页</a>
+      <a href="./chat.html">对话</a>
+      <a href="./tools.html">工作流</a>
+      <a href="./knowledge.html" class="active">知识库</a>
+      <a href="./storage.html">存储</a>
+    </div>
+  </nav>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="chat-title">
+        <span id="currentKnowledgeBase">知识库对话</span>
+        <small id="selectedKnowledgeLabel" style="display: none; margin-left: 10px; color: #4dabf7;"></small>
+      </div>
+      <div class="chat-actions">
+        <button class="action-btn" id="selectKnowledgeBtn">
+          <i class="fas fa-database"></i>
+          选择知识库
+        </button>
+        <button class="action-btn" id="uploadKnowledgeBtn">
+          <i class="fas fa-upload"></i>
+          上传知识库
+        </button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="message">
+        <div class="message-avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="message-content">
+          <div class="message-text">欢迎使用知识库对话功能！请先选择或上传一个知识库，然后开始对话。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <textarea class="chat-input-field" id="messageInput" placeholder="输入消息..." rows="1"></textarea>
+      <button class="chat-send-btn" id="sendButton" disabled>
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 上传知识库模态框 -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>上传知识库</h3>
+      <button class="close-modal" id="closeUploadModal">&times;</button>
+    </div>
+    <div class="form-group">
+      <label for="knowledgeTitle">知识库标题</label>
+      <input type="text" id="knowledgeTitle" class="form-control" placeholder="输入知识库标题">
+    </div>
+    <div class="form-group">
+      <label for="knowledgeContent">知识库内容</label>
+      <textarea id="knowledgeContent" class="form-control" placeholder="输入知识库内容"></textarea>
+    </div>
+    <button class="modal-submit" id="uploadSubmit">上传知识库</button>
+  </div>
+</div>
+
+<!-- 选择知识库模态框 -->
+<div class="modal-overlay" id="selectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>选择知识库</h3>
+      <button class="close-modal" id="closeSelectModal">&times;</button>
+    </div>
+    <div id="knowledgeTableContainer">
+      <table class="knowledge-table" id="knowledgeTable">
+        <thead>
+        <tr>
+          <th>知识库名称</th>
+          <th class="action-cell">操作</th>
+        </tr>
+        </thead>
+        <tbody id="knowledgeTableBody">
+        <!-- 知识库列表将通过JavaScript动态加载 -->
+        <tr>
+          <td colspan="2" style="text-align: center;">正在加载知识库...</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="modal-submit" id="refreshKnowledgeBtn">
+      <i class="fas fa-sync-alt"></i> 刷新知识库列表
+    </button>
+  </div>
+</div>
+
+<!-- 提示框 -->
+<div class="alert" id="alert">
+  <i class="fas fa-check-circle"></i>
+  <span id="alertMessage"></span>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>智能文件存储系统</h3>
+        <p>高效、安全、智能的文件管理解决方案</p>
+      </div>
+      <div class="footer-section">
+        <h3>快速链接</h3>
+        <ul class="footer-links">
+          <li><a href="./index.html">首页</a></li>
+          <li><a href="./chat.html">对话</a></li>
+          <li><a href="./knowledge.html">知识库</a></li>
+          <li><a href="./storage.html">存储</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>联系我们</h3>
+        <p><i class="fas fa-envelope"></i> contact@filestorage.com</p>
+        <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 智能RAG存储系统 - 保留所有权利</p>
+    </div>
+  </div>
+</footer>
+<script src="../js/knowledge.js"></script>
+</body>
+</html>

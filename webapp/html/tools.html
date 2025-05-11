@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能RAG存储系统 - 工具流</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+<div class="container">
+  <nav class="navbar">
+    <div class="logo">
+      <h2>智能RAG存储系统</h2>
+    </div>
+    <div class="nav-links">
+      <a href="./index.html">首页</a>
+      <a href="./chat.html">对话</a>
+      <a href="./tools.html" class="active">工作流</a>
+      <a href="./knowledge.html">知识库</a>
+      <a href="./storage.html">存储</a>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-title" id="currentTool">CSDN自动发帖</div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="message">
+          <div class="message-avatar">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="message-content">
+            <div class="message-text">欢迎使用工具流功能！请在右侧选择工具，然后开始对话。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <textarea class="chat-input-field" id="messageInput" placeholder="输入消息..." rows="1"></textarea>
+        <button class="chat-send-btn" id="sendButton">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">工具列表</div>
+      </div>
+      <div class="sidebar-menu">
+        <div class="sidebar-item active" data-tool="csdn">
+          <i class="fas fa-edit"></i>
+          <span>CSDN自动发帖</span>
+        </div>
+        <div class="sidebar-item" data-tool="search">
+          <i class="fas fa-search"></i>
+          <span>自然语言检索</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 提示框 -->
+<div class="alert" id="alert">
+  <i class="fas fa-info-circle"></i>
+  <span id="alertMessage"></span>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>智能RAG存储系统</h3>
+        <p>高效、安全、智能的文件管理解决方案</p>
+      </div>
+      <div class="footer-section">
+        <h3>快速链接</h3>
+        <ul class="footer-links">
+          <li><a href="./index.html">首页</a></li>
+          <li><a href="./chat.html">对话</a></li>
+          <li><a href="./tools.html">工具流</a></li>
+          <li><a href="./knowledge.html">知识库</a></li>
+          <li><a href="./storage.html">存储</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>联系我们</h3>
+        <p><i class="fas fa-envelope"></i> contact@filestorage.com</p>
+        <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 智能RAG存储系统 - 保留所有权利</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/tools.js"></script>
+</body>
+</html>

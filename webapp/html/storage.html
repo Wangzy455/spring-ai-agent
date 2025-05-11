@@ -136,13 +136,13 @@
       background-color: #3793dd;
     }
 
-    .fileEntity-grid {
+    .file-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 20px;
     }
 
-    .fileEntity-card {
+    .file-card {
       background-color: #252525;
       border-radius: 8px;
       padding: 15px;
@@ -150,18 +150,18 @@
       transition: transform 0.3s;
     }
 
-    .fileEntity-card:hover {
+    .file-card:hover {
       transform: translateY(-5px);
     }
 
-    .fileEntity-icon {
+    .file-icon {
       font-size: 40px;
       color: #4dabf7;
       text-align: center;
       margin-bottom: 10px;
     }
 
-    .fileEntity-image {
+    .file-image {
       width: 100%;
       height: 140px;
       object-fit: cover;
@@ -169,24 +169,24 @@
       margin-bottom: 10px;
     }
 
-    .fileEntity-name {
+    .file-name {
       font-size: 16px;
       margin-bottom: 5px;
       word-break: break-all;
     }
 
-    .fileEntity-date {
+    .file-date {
       font-size: 12px;
       color: #aaa;
       margin-bottom: 15px;
     }
 
-    .fileEntity-actions {
+    .file-actions {
       display: flex;
       justify-content: space-between;
     }
 
-    .fileEntity-btn {
+    .file-btn {
       padding: 6px 12px;
       border-radius: 4px;
       border: none;
@@ -317,7 +317,7 @@
       color: #aaa;
     }
 
-    .fileEntity-input-label {
+    .file-input-label {
       background-color: #4dabf7;
       color: #fff;
       padding: 10px 20px;
@@ -327,15 +327,15 @@
       transition: background-color 0.3s;
     }
 
-    .fileEntity-input-label:hover {
+    .file-input-label:hover {
       background-color: #3793dd;
     }
 
-    .fileEntity-input {
+    .file-input {
       display: none;
     }
 
-    .selected-fileEntity {
+    .selected-file {
       margin-top: 15px;
       padding: 10px;
       background-color: #333;
@@ -497,11 +497,11 @@
       <h2>智能RAG存储系统</h2>
     </div>
     <div class="nav-links">
-      <a href="index.html">首页</a>
-      <a href="chat.html">对话</a>
-      <a href="tools.html">工作流</a>
-      <a href="knowledge.html">知识库</a>
-      <a href="storage.html" class="active">存储</a>
+      <a href="./index.html">首页</a>
+      <a href="./chat.html">对话</a>
+      <a href="./tools.html">工作流</a>
+      <a href="./knowledge.html">知识库</a>
+      <a href="./storage.html" class="active">存储</a>
     </div>
   </nav>
 
@@ -542,7 +542,7 @@
         </button>
       </div>
 
-      <div class="fileEntity-grid" id="fileGrid">
+      <div class="file-grid" id="fileGrid">
         <!-- 文件将通过JavaScript动态加载 -->
         <div class="empty-state">
           <i class="fas fa-folder-open"></i>
@@ -563,9 +563,9 @@
     <div class="upload-area" id="uploadArea">
       <i class="fas fa-cloud-upload-alt"></i>
       <p>拖拽文件到此处或点击下方按钮选择文件</p>
-      <label for="fileInput" class="fileEntity-input-label">选择文件</label>
-      <input type="fileEntity" id="fileInput" class="fileEntity-input">
-      <div class="selected-fileEntity" id="selectedFile"></div>
+      <label for="fileInput" class="file-input-label">选择文件</label>
+      <input type="file" id="fileInput" class="file-input">
+      <div class="selected-file" id="selectedFile"></div>
     </div>
     <button class="upload-submit" id="uploadSubmit">上传文件</button>
   </div>
@@ -581,28 +581,26 @@
   <div class="container">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>智能RAG存储系统</h3>
+        <h3>智能文件存储系统</h3>
         <p>高效、安全、智能的文件管理解决方案</p>
       </div>
       <div class="footer-section">
         <h3>快速链接</h3>
         <ul class="footer-links">
-          <li><a href="index.html">首页</a></li>
-          <li><a href="storage.html">存储</a></li>
-          <li><a href="chat.html">对话</a></li>
-          <li><a href="knowledge.html">知识库</a></li>
+          <li><a href="./index.html">首页</a></li>
+          <li><a href="./storage.html">存储</a></li>
           <li><a href="#">帮助中心</a></li>
           <li><a href="#">关于我们</a></li>
         </ul>
       </div>
       <div class="footer-section">
         <h3>联系我们</h3>
-        <p><i class="fas fa-envelope"></i> wangziyuan455@Gmail.com</p>
+        <p><i class="fas fa-envelope"></i> contact@filestorage.com</p>
         <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 智能RAG存储系统 - 保留所有权利</p>
+      <p>&copy; 2025 智能文件存储系统 - 保留所有权利</p>
     </div>
   </div>
 </footer>
@@ -678,7 +676,7 @@
         }
       })
       .catch(error => {
-        console.error('Error fetching fileEntities:', error);
+        console.error('Error fetching files:', error);
         fileGrid.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-exclamation-triangle"></i>
@@ -689,55 +687,55 @@
     }
 
     // 显示文件列表
-    function displayFiles(fileEntities) {
+    function displayFiles(files) {
       fileGrid.innerHTML = '';
 
-      fileEntities.forEach(fileEntity => {
-        const fileDate = new Date(fileEntity.date).toLocaleDateString('zh-CN');
-        let fileIcon = 'fa-fileEntity';
-        const isImage = fileEntity.fileType.match(/^(jpg|jpeg|png|gif|bmp|webp)$/i);
+      files.forEach(file => {
+        const fileDate = new Date(file.date).toLocaleDateString('zh-CN');
+        let fileIcon = 'fa-file';
+        const isImage = file.fileType.match(/^(jpg|jpeg|png|gif|bmp|webp)$/i);
 
         // 根据文件类型设置图标
         if (isImage) {
-          fileIcon = 'fa-fileEntity-image';
-        } else if (fileEntity.fileType.match(/^(mp4|avi|mov|wmv|flv|mkv)$/i)) {
-          fileIcon = 'fa-fileEntity-video';
-        } else if (fileEntity.fileType.match(/^(zip|rar|7z|tar|gz)$/i)) {
-          fileIcon = 'fa-fileEntity-archive';
-        } else if (fileEntity.fileType.match(/^(txt|doc|docx|pdf|md)$/i)) {
-          fileIcon = 'fa-fileEntity-alt';
+          fileIcon = 'fa-file-image';
+        } else if (file.fileType.match(/^(mp4|avi|mov|wmv|flv|mkv)$/i)) {
+          fileIcon = 'fa-file-video';
+        } else if (file.fileType.match(/^(zip|rar|7z|tar|gz)$/i)) {
+          fileIcon = 'fa-file-zipper';
+        } else if (file.fileType.match(/^(txt|doc|docx|pdf|md)$/i)) {
+          fileIcon = 'fa-file-lines';
         }
 
         const fileCard = document.createElement('div');
-        fileCard.className = 'fileEntity-card';
+        fileCard.className = 'file-card';
 
         // 如果是图片，显示图片本身，否则显示图标
-        if (isImage && fileEntity.fileUrl) {
+        if (isImage && file.fileUrl) {
           fileCard.innerHTML = `
-                <img src="${fileEntity.fileUrl}" alt="${fileEntity.fileName}" class="fileEntity-image" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20fill%3D%22%23444%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%23fff%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3E图片加载失败%3C%2Ftext%3E%3C%2Fsvg%3E';">
-                <div class="fileEntity-name">${fileEntity.fileName}</div>
-                <div class="fileEntity-date">${fileDate}</div>
-                <div class="fileEntity-actions">
-                    <button class="fileEntity-btn download-btn" data-filename="${fileEntity.fileName}">
+                <img src="${file.fileUrl}" alt="${file.fileName}" class="file-image" onerror="this.onerror=null; this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20fill%3D%22%23444%22%20width%3D%22100%22%20height%3D%22100%22%2F%3E%3Ctext%20fill%3D%22%23fff%22%20font-family%3D%22sans-serif%22%20font-size%3D%2212%22%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%3E图片加载失败%3C%2Ftext%3E%3C%2Fsvg%3E';">
+                <div class="file-name">${file.fileName}</div>
+                <div class="file-date">${fileDate}</div>
+                <div class="file-actions">
+                    <button class="file-btn download-btn" data-filename="${file.fileName}">
                         <i class="fas fa-download"></i> 下载
                     </button>
-                    <button class="fileEntity-btn delete-btn" data-filename="${fileEntity.fileName}">
+                    <button class="file-btn delete-btn" data-filename="${file.fileName}">
                         <i class="fas fa-trash"></i> 删除
                     </button>
                 </div>
             `;
         } else {
           fileCard.innerHTML = `
-                <div class="fileEntity-icon">
+                <div class="file-icon">
                     <i class="fas ${fileIcon}"></i>
                 </div>
-                <div class="fileEntity-name">${fileEntity.fileName}</div>
-                <div class="fileEntity-date">${fileDate}</div>
-                <div class="fileEntity-actions">
-                    <button class="fileEntity-btn download-btn" data-filename="${fileEntity.fileName}">
+                <div class="file-name">${file.fileName}</div>
+                <div class="file-date">${fileDate}</div>
+                <div class="file-actions">
+                    <button class="file-btn download-btn" data-filename="${file.fileName}">
                         <i class="fas fa-download"></i> 下载
                     </button>
-                    <button class="fileEntity-btn delete-btn" data-filename="${fileEntity.fileName}">
+                    <button class="file-btn delete-btn" data-filename="${file.fileName}">
                         <i class="fas fa-trash"></i> 删除
                     </button>
                 </div>
@@ -793,7 +791,7 @@
         showAlert('下载成功', 'success');
       })
       .catch(error => {
-        console.error('Error downloading fileEntity:', error);
+        console.error('Error downloading file:', error);
         showAlert('下载失败，请重试', 'error');
       });
     }
@@ -822,7 +820,7 @@
         }
       })
       .catch(error => {
-        console.error('Error deleting fileEntity:', error);
+        console.error('Error deleting file:', error);
         showAlert('删除失败，请重试', 'error');
       });
     }
@@ -862,22 +860,22 @@
       e.preventDefault();
       uploadArea.classList.remove('dragover');
 
-      if (e.dataTransfer.fileEntities.length) {
-        fileInput.fileEntities = e.dataTransfer.fileEntities;
-        showSelectedFile(e.dataTransfer.fileEntities[0]);
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        showSelectedFile(e.dataTransfer.files[0]);
       }
     });
 
     // 文件选择
     fileInput.addEventListener('change', function() {
-      if (this.fileEntities.length) {
-        showSelectedFile(this.fileEntities[0]);
+      if (this.files.length) {
+        showSelectedFile(this.files[0]);
       }
     });
 
-    function showSelectedFile(fileEntity) {
+    function showSelectedFile(file) {
       selectedFile.style.display = 'block';
-      selectedFile.textContent = `已选择: ${fileEntity.name} (${formatFileSize(fileEntity.size)})`;
+      selectedFile.textContent = `已选择: ${file.name} (${formatFileSize(file.size)})`;
     }
 
     function formatFileSize(bytes) {
@@ -890,14 +888,14 @@
 
     // 上传文件
     uploadSubmit.addEventListener('click', function() {
-      if (!fileInput.fileEntities.length) {
+      if (!fileInput.files.length) {
         showAlert('请选择文件', 'error');
         return;
       }
 
-      const fileEntity = fileInput.fileEntities[0];
+      const file = fileInput.files[0];
       const formData = new FormData();
-      formData.append('fileEntity', fileEntity);
+      formData.append('file', file);
 
       uploadSubmit.disabled = true;
       uploadSubmit.innerHTML = '<div class="loading-spinner"></div> 上传中...';
@@ -934,7 +932,7 @@
         }
       })
       .catch(error => {
-        console.error('Error uploading fileEntity:', error);
+        console.error('Error uploading file:', error);
         showAlert('上传失败，请重试', 'error');
       })
       .finally(() => {

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能RAG存储系统 - 首页</title>
+  <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+<div class="container">
+  <nav class="navbar">
+    <div class="logo">
+      <h2>智能RAG存储系统</h2>
+    </div>
+    <div class="nav-links">
+      <a href="index.html" class="active">首页</a>
+      <a href="chat.html">对话</a>
+      <a href="tools.html">工作流</a>
+      <a href="knowledge.html">知识库</a>
+      <a href="storage.html">存储</a>
+    </div>
+  </nav>
+
+  <div class="content">
+    <h1>欢迎使用智能RAG存储系统</h1>
+    <p>这是一个智能RAG存储系统，能够帮助您高效管理各类文件资源。系统支持多种文件类型的存储、分类和检索，让您的文件管理更加便捷。</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>文件分类存储</h3>
+        <p>系统自动对上传的文件进行分类，包括图片、视频、压缩文件、文本等多种类型，方便您快速查找。</p>
+      </div>
+      <div class="feature-card">
+        <h3>AI 工作流</h3>
+        <p>封装了可以直接使用的AI 工作流，包括自然语言查询，csdn自动发帖</p>
+      </div>
+      <div class="feature-card">
+        <h3>智能检索</h3>
+        <p>强大的检索功能，帮助您在海量文件中快速找到所需内容，提高工作效率。</p>
+      </div>
+      <div class="feature-card">
+        <h3>Docker容器化技术</h3>
+        <p>利用云原生技术，可以容器化的部署系统。</p>
+      </div>
+    </div>
+
+    <div class="dashboard-section">
+      <h2>系统数据概览</h2>
+      <div class="dashboard-grid">
+        <div class="chart-card">
+          <h3>文件类型分布</h3>
+          <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h3>文件数量统计</h3>
+          <div class="chart-container">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>智能文件存储系统</h3>
+        <p>高效、安全、智能的文件管理解决方案</p>
+      </div>
+      <div class="footer-section">
+        <h3>快速链接</h3>
+        <ul class="footer-links">
+          <li><a href="index.html">首页</a></li>
+          <li><a href="storage.html">存储</a></li>
+          <li><a href="#">帮助中心</a></li>
+          <li><a href="#">关于我们</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>联系我们</h3>
+        <p><i class="fas fa-envelope"></i> contact@filestorage.com</p>
+        <p><i class="fas fa-phone"></i> +86 123 4567 8901</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 智能文件存储系统 - 保留所有权利</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 导航栏激活状态
+    const currentPage = window.location.pathname.split('/').pop();
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    navLinks.forEach(link => {
+      const linkPage = link.getAttribute('href');
+      if (linkPage === currentPage) {
+        link.classList.add('active');
+      } else if (currentPage === '' && linkPage === 'index.html') {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="../js/index.js"></script>
+</body>
+</html>
